@@ -34,7 +34,9 @@ class PostgresConnection:
         return self.connection.execute(self.translate(sql), params)
 
     def executemany(self, sql, params):
-        return self.connection.executemany(self.translate(sql), params)
+        cursor = self.connection.cursor()
+        cursor.executemany(self.translate(sql), params)
+        return cursor
 
 
 DB_PATH = Path(os.getenv("DATABASE_PATH", str(Path(__file__).resolve().parent.parent.parent / "invoice_agent.db")))
