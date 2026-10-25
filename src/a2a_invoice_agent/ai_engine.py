@@ -46,8 +46,12 @@ Important:
 - Use exact packageId supplied.
 - Extract actual vendor, invoice number, amountMinor and currency.
 - Provide exactly THREE decisive bracketed evidence references.
-- Copy references exactly from the paragraph determining the action.
+- Each evidenceRefs item MUST contain ONLY one reference token, including its opening and closing square brackets.
+- A valid item looks like "[INV-001]" or "[PO-123]".
+- NEVER include a colon, description, sentence, whitespace outside the brackets, or any text after the closing bracket.
+- Copy only the exact bracketed token from the source paragraph determining the action.
 - Do not use cover-sheet, archive or training-decoy references.
+- Before returning JSON, verify every evidenceRefs item starts with "[" and ends with "]", and contains no text outside that single token.
 - Rationale must be 60–1500 characters, name the action and cite at least two references.
 - actionId must be at least 12 characters.
 
