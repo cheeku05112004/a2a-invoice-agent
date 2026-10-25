@@ -101,7 +101,15 @@ async def read_request(request):
         raw_data = json.loads(body)
         parsed = A2ARequest.model_validate(raw_data)
 
-    except (json.JSONDecodeError, ValidationError):
+    except json.JSONDecodeError as exc:
+        print("A2A JSON DECODE ERROR:", str(exc), flush=True)
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid A2A request",
+        )
+
+    except ValidationError as exc:
+        print("A2A VALIDATION ERRORS:", exc.errors(), flush=True)
         raise HTTPException(
             status_code=400,
             detail="Invalid A2A request",
