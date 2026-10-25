@@ -127,7 +127,6 @@ def call_ai(packages, batch_id, policy_revision):
                 ),
             },
         ],
-        "temperature": 0,
         "max_completion_tokens": 12000,
         "response_format": {"type": "json_object"},
     }
