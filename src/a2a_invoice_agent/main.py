@@ -1,3 +1,4 @@
+
 import os
 
 from dotenv import load_dotenv
@@ -9,7 +10,7 @@ PUBLIC_BASE_URL = os.getenv(
     "http://127.0.0.1:8000/a2a/"
 ).rstrip("/") + "/"
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 
 from a2a_invoice_agent.api import router
@@ -22,6 +23,23 @@ app = FastAPI(
     version="1.0.0"
 )
 
+@app.exception_handler(HTTPException)
+async def log_http_errors(request: Request, exc: HTTPException):
+    if exc.status_code == 400:
+        print(
+            "DIAGNOSTIC HTTP 400:",
+            request.method,
+            request.url.path,
+            "DETAIL:",
+            exc.detail,
+            flush=True,
+        )
+
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers=exc.headers,
+    )
 
 @app.on_event("startup")
 def startup_event():
