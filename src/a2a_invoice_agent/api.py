@@ -1,6 +1,7 @@
 import json
 import uuid
 import asyncio
+import traceback
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -482,6 +483,7 @@ async def send_message(
         raise
 
     except Exception:
+        traceback.print_exc()
         raise HTTPException(
             status_code=502,
             detail="Invoice analysis failed",
