@@ -191,6 +191,14 @@ def call_ai(packages, batch_id, policy_revision):
     if set(returned_ids) != set(expected_ids):
         raise ValueError("Proposal package IDs do not match input")
 
+    # Remove the model's empty duplicate evidence field.
+    # All other unexpected fields remain subject to strict validation.
+    for proposal in proposals:
+        if isinstance(proposal, dict):
+            extra_refs = proposal.get("evidenceRefs2")
+            if extra_refs == []:
+                proposal.pop("evidenceRefs2")
+
     validated = ProposalBatch.model_validate({
         "batchId": batch_id,
         "proposals": proposals,
