@@ -183,7 +183,10 @@ def call_ai(packages, batch_id, policy_revision):
     returned_ids = [str(p.get("packageId", "")) for p in proposals]
 
     if len(returned_ids) != len(expected_ids):
-        raise ValueError("Wrong number of proposals")
+        raise ValueError(
+            f"Wrong number of proposals: expected {len(expected_ids)}, "
+            f"received {len(returned_ids)}"
+        )
 
     if len(set(returned_ids)) != len(returned_ids):
         raise ValueError("Duplicate proposal package IDs")
