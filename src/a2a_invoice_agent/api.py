@@ -284,37 +284,6 @@ async def send_message(
         })
 
     # --------------------------------------------
-    # INITIAL REQUEST CONFIGURATION VALIDATION
-    # --------------------------------------------
-
-    config = request_data.configuration
-
-    if config is None:
-        raise HTTPException(
-            status_code=400,
-            detail="Initial request configuration is required",
-        )
-
-    if config.history_length != 20:
-        raise HTTPException(
-            status_code=400,
-            detail="historyLength must be 20",
-        )
-
-    required_modes = {
-        PROPOSAL_MEDIA_TYPE,
-        RECEIPT_MEDIA_TYPE,
-    }
-
-    if not required_modes.issubset(
-        set(config.accepted_output_modes)
-    ):
-        raise HTTPException(
-            status_code=400,
-            detail="Required output modes are missing",
-        )
-
-    # --------------------------------------------
     # INITIAL INVOICE BATCH
     # --------------------------------------------
 
@@ -404,6 +373,41 @@ async def send_message(
 
     # AI runs only after successful reservation.
     try:
+        # Validate configuration only for a new initial request.
+        # Completed replays return before reaching this block.
+        config = request_data.configuration
+
+        if config is None:
+            raise HTTPException(
+                status_code=400,
+                detail="Initial request configuration is required",
+            )
+
+        if config.return_immediately is not False:
+            raise HTTPException(
+                status_code=400,
+                detail="returnImmediately must be false",
+            )
+
+        if config.history_length != 20:
+            raise HTTPException(
+                status_code=400,
+                detail="historyLength must be 20",
+            )
+
+        required_modes = {
+            PROPOSAL_MEDIA_TYPE,
+            RECEIPT_MEDIA_TYPE,
+        }
+
+        if not required_modes.issubset(
+            set(config.accepted_output_modes)
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="Required output modes are missing",
+            )
+
         proposal_batch = generate_proposals(
             batch.model_dump(
                 by_alias=True,
