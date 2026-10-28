@@ -1,3 +1,4 @@
+
 import json
 import uuid
 import asyncio
@@ -326,7 +327,12 @@ async def send_message(
     try:
         batch = InvoiceBatch.model_validate(part.data)
 
-    except ValidationError:
+    except ValidationError as exc:
+        print(
+            "INVOICE BATCH VALIDATION ERROR:",
+            exc.errors(include_input=False),
+            flush=True,
+        )
         raise HTTPException(
             status_code=400,
             detail="Invalid invoice batch",

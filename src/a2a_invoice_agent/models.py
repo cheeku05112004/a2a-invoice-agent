@@ -36,7 +36,7 @@ class StrictModel(BaseModel):
 class InvoiceBatch(StrictModel):
     batch_id: str = Field(alias="batchId", min_length=1)
     policy_revision: str = Field(alias="policyRevision", min_length=1)
-    packages: list[dict[str, Any]] = Field(min_length=12, max_length=12)
+    packages: list[dict[str, Any]] = Field(min_length=1)
 
 
 class InvoiceFacts(StrictModel):
