@@ -383,12 +383,6 @@ async def send_message(
                 detail="Initial request configuration is required",
             )
 
-        if config.return_immediately is not False:
-            raise HTTPException(
-                status_code=400,
-                detail="returnImmediately must be false",
-            )
-
         if config.history_length != 20:
             raise HTTPException(
                 status_code=400,
