@@ -45,6 +45,13 @@ Important:
 - Do not settle when material information is uncertain.
 - Use exact packageId supplied.
 - Extract actual vendor, invoice number, amountMinor and currency.
+- Never return an empty string for vendorName or invoiceNumber.
+- If vendorName or invoiceNumber is genuinely absent from the package,
+  use the exact string "UNKNOWN" for that field. Do not invent a value.
+- If either vendorName or invoiceNumber is UNKNOWN, do not choose
+  settle_invoice or reject_duplicate. Choose open_exception when the
+  missing identity prevents a reliable decision, and explain the missing
+  information in the rationale.
 - Provide exactly THREE decisive bracketed evidence references.
 - Each evidenceRefs item MUST contain ONLY one reference token, including its opening and closing square brackets.
 - A valid item looks like "[INV-001]" or "[PO-123]".
