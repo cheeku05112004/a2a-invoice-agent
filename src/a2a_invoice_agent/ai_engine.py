@@ -306,7 +306,7 @@ def call_ai(packages, batch_id, policy_revision):
 
 
 def collect_evidence_refs(value):
-    """Collect exact bracketed reference tokens from nested package data."""
+    """Collect bracketed references and bare R_ IDs from package data."""
     refs = set()
 
     if isinstance(value, dict):
@@ -319,6 +319,12 @@ def collect_evidence_refs(value):
 
     elif isinstance(value, str):
         refs.update(re.findall(r"\[[^\[\]\r\n]+\]", value))
+
+        bare_refs = re.findall(
+            r"(?<![A-Za-z0-9_])R_[A-Za-z0-9_-]+",
+            value,
+        )
+        refs.update(f"[{ref}]" for ref in bare_refs)
 
     return refs
 
